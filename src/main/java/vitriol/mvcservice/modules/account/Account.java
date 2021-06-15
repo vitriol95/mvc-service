@@ -1,18 +1,15 @@
 package vitriol.mvcservice.modules.account;
-
 import lombok.*;
-
+import vitriol.mvcservice.modules.superclass.LocalDateTimeEntity;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "account")
-@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Account {
+public class Account extends LocalDateTimeEntity {
 
     @Id
     @GeneratedValue

@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import vitriol.mvcservice.modules.account.form.SignUpForm;
+import vitriol.mvcservice.modules.account.validator.SignUpFormValidator;
 
 import javax.validation.Valid;
 
@@ -17,6 +20,12 @@ import javax.validation.Valid;
 public class AccountController {
 
     private final AccountService accountService;
+    private final SignUpFormValidator signUpFormValidator;
+
+    @InitBinder("signUpForm")
+    public void initBinder(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(signUpFormValidator);
+    }
 
     @GetMapping("/sign-up")
     public String signUpForm(Model model) {
