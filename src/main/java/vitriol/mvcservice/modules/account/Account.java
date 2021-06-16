@@ -1,18 +1,22 @@
 package vitriol.mvcservice.modules.account;
 import lombok.*;
+import vitriol.mvcservice.modules.post.Post;
 import vitriol.mvcservice.modules.superclass.LocalDateTimeEntity;
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Getter
 @Setter
 public class Account extends LocalDateTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -27,5 +31,6 @@ public class Account extends LocalDateTimeEntity {
     @Basic(fetch = FetchType.EAGER)
     private String profileImage;
 
-
+    @OneToMany(mappedBy = "account")
+    private Set<Post> posts = new HashSet<>();
 }

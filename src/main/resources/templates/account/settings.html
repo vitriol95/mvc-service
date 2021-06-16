@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html :: head"></head>
+
+<body>
+    <nav th:replace="fragments.html :: main-nav"></nav>
+    <div class="container">
+        <div class="row mt-5 justify-content-center">
+            <div class="col-10">
+                <div th:replace="fragments.html :: message"></div>
+                <div class="row">
+                    <h2 class="col-sm-12" th:text="${account.email}">vitriol</h2>
+                </div>
+                <div class="row mt-3">
+                    <form class="col-sm-6" th:action="@{/settings}" th:object="${profileForm}" method="post" novalidate>
+                        <div class="form-group">
+                            <label for="nickname">닉네임 변경</label>
+                            <input id="nickname" type="text" th:field="*{nickname}" class="form-control" placeholder="new-nickname" aria-describedby="nicknameHelp" required>
+                            <small id="nicknameHelp" class="form-text text-muted">문자, 숫자를 포함한 3 ~ 20글자만 가능합니다.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">올바른 형식의 닉네임을 작성해 주세요</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="bio">소개글</label>
+                            <input id="bio" type="text" th:field="*{bio}" class="form-control" placeholder="간략한 소개를 적어주세요" aria-describedby="bioHelp" required>
+                            <small id="bioHelp" class="form-text text-muted">35자 이내로 작성 가능합니다.</small>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}">조금 깁니다.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <input id="profileImage" type="hidden" th:field="*{profileImage}" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block" type="submit" aria-describedby="submitHelp">수정하기</button>
+                        </div>
+                    </form>
+                    <div class="col-sm-6">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                프로필 이미지
+                            </div>
+                            <div id="current-profile-image" class="mt-3">
+                                <svg th:if="${#strings.isEmpty(profileForm.profileImage)}" class="rounded" th:data-jdenticon-value="${#authentication.name}" width="125" height="125"></svg>
+                                <img th:if="${!#strings.isEmpty(profileForm.profileImage)}" class="rounded" th:src="${profileForm.profileImage}" width="125" height="125" alt="name" th:alt="${account.nickname}">
+                            </div>
+                            <div id="new-profile-image" class="mt-3"></div>
+                            <div class="card-body">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="profile-image-file">
+                                    <label class="custom-file-label" for="profile-image-file">프로필 이미지 변경</label>
+                                </div>
+                                <div id="new-profile-image-control" class="mt-3">
+                                    <button class="btn btn-outline-primary btn-block" id="cut-button">자르기</button>
+                                    <button class="btn btn-outline-primary btn-block" id="confirm-button">확인</button>
+                                    <button class="btn btn-outline-primary btn-block" id="reset-button">취소</button>
+                                </div>
+                                <div id="cropped-new-profile-image" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" integrity="sha512-0SPWAwpC/17yYyZ/4HSllgaK7/gg9OlVozq8K7rf3J8LvCjYEEIfzzpnA2/SSjpGIunCSD18r3UhvDcu/xncWA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cropper/1.0.1/jquery-cropper.min.js" integrity="sha512-V8cSoC5qfk40d43a+VhrTEPf8G9dfWlEJgvLSiq2T2BmgGRmZzB8dGe7XAABQrWj3sEfrR5xjYICTY4eJr76QQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="application/javascript">
+        $(function () {
+            cropper = ''
+            let $confirmBtn = $("#confirm-button")
+            let $resetBtn = $("#reset-button")
+            let $cutBtn = $("#cut-button")
+            let $newProfileImage = $("#new-profile-image")
+            let $currentProfileImage = $("#current-profile-image")
+            let $resultImage = $("#cropped-new-profile-image")
+            let $profileImage = $("#profileImage")
+
+            $newProfileImage.hide()
+            $cutBtn.hide()
+            $resetBtn.hide()
+            $confirmBtn.hide()
+
+            $("#profile-image-file").change(function (e){
+                if (e.target.files.length === 1) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        if (e.target.result) {
+                            let img = document.createElement("img");
+                            img.id = 'new-profile';
+                            img.src = e.target.result;
+                            img.width = 250;
+
+                            $newProfileImage.html(img);
+                            $newProfileImage.show()
+                            $currentProfileImage.hide()
+
+                            let $newImage = $(img)
+                            $newImage.cropper({aspectRatio: 1})
+                            cropper = $newImage.data('cropper');
+
+                            $cutBtn.show()
+                            $confirmBtn.show()
+                            $resetBtn.show()
+                        }
+                    }
+
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            })
+
+            $resetBtn.click(function (){
+                $currentProfileImage.show()
+                $newProfileImage.hide()
+                $resultImage.hide()
+                $resetBtn.hide()
+                $cutBtn.hide()
+                $confirmBtn.hide()
+                $profileImage.val('')
+            })
+
+            $cutBtn.click(function (){
+                let dataUrl = cropper.getCroppedCanvas().toDataURL()
+                let newImage = document.createElement("img");
+                newImage.id = "cropped-new-profile-image"
+                newImage.src = dataUrl
+                newImage.width=125
+                $resultImage.html(newImage)
+                $resultImage.show()
+                $confirmBtn.show()
+
+                $confirmBtn.click(function(){
+                    $newProfileImage.html(newImage)
+                    $cutBtn.hide()
+                    $confirmBtn.hide()
+                    $profileImage.val(dataUrl)
+                })
+            })
+        })
+    </script>
+</body>
+</html>

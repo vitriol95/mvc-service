@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html::head">
+
+</head>
+<body>
+    <nav th:replace="fragments.html :: main-nav"></nav>
+
+    <main role="main" class="container">
+        <div class="d-flex align-items-center p-3 my-3 bg-purple rounded shadow-sm" style="justify-content: space-between">
+            <div class="lh-200">
+                <h3 class="mb-0 lh-200" th:text="${post.title}">Bootstrap</h3>
+                <small th:text="${#temporals.format(post.modifiedDate,'yyyy-MM-dd HH:mm')}">localdate</small>
+            </div>
+
+            <div class="lh-200" th:if="${post.isWriter(#authentication.principal)}">
+                <form class="form-inline" th:if="${post.isWriter(#authentication.principal)}" action="#" th:action="@{'/posts/' + ${post.getId()} + '/update'}" method="get" novalidate>
+                    <div class="form-group">
+                        <button class="btn btn-outline-primary" type="submit">수정</button>
+                    </div>
+                </form>
+                <form class="form-inline" th:if="${post.isWriter(#authentication.principal)}" action="#" th:action="@{'/posts/' + ${post.getId()} + '/delete'}" method="post" novalidate>
+                    <div class="form-group">
+                        <button class="btn btn-outline-danger" type="submit">삭제</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center p-3 my-3 bg-purple rounded shadow-sm">
+            <div class="lh-100">
+                <svg th:if="${#strings.isEmpty(post.account?.profileImage)}" data-jdenticon-value="user111" th:data-jdenticon-value="${post.account.email}"
+                     width="32" height="32" class="rounded boarder bg-light"></svg>
+                <img th:if="${!#strings.isEmpty(post.account?.profileImage)}" th:src="${post.account.profileImage}"
+                     width="32" height="32" class="rounded boarder bg-light">
+                <span class="lh-100 h6 mb-0" th:text="${post.account.nickname}"></span>
+            </div>
+        </div>
+        <div class="my-3 p-3 bg-white rounded shadow-sm" th:utext="${post.description}">
+
+        </div>
+
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0"><strong>코멘트</strong></h6>
+            <div class="media text-muted pt-3">
+                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+
+                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <strong class="text-gray-dark">Full Name</strong>
+                        <a href="#">Follow</a>
+                    </div>
+                    <span class="d-block">@username</span>
+                </div>
+            </div>
+
+            <small class="d-block text-right mt-3">
+                <a href="#">All suggestions</a>
+            </small>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,21 @@
+package vitriol.mvcservice.modules.account.form;
+
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
+@Data
+public class ProfileForm {
+
+    @NotBlank
+    @Length(min = 3, max = 20)
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-z0-9_-]{3,20}$")
+    private String nickname;
+
+    @Length(max = 35)
+    private String bio;
+
+    private String profileImage;
+}

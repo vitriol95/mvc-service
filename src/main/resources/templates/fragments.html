@@ -12,7 +12,7 @@
     </script>
     <style>
         .container {
-            max-width: 100%;
+            max-width: 90%;
         }
     </style>
 </head>
@@ -31,16 +31,16 @@
             <li class="nav-item" sec:authorize="!isAuthenticated()" th:classappend="${#request.getRequestURI().equals('/sign-up')}? active">
                 <a class="nav-link" href="/sign-up">회원 가입</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">게시글</a>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="#">유저 검색</a>
             </li>
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     내 정보
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">글쓰기</a>
-                    <a class="dropdown-item" href="#">정보 변경</a>
+                    <a class="dropdown-item" href="/new-post">글쓰기</a>
+                    <a class="dropdown-item" href="/settings">정보 변경</a>
                     <div class="dropdown-divider"></div>
                     <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
                         <button class="dropdown-item" type="submit">로그아웃</button>
@@ -88,5 +88,22 @@
             })
         }, false)
     }())
+</script>
+
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+    <span th:text="${message}">완료</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<script th:fragment="summerNote" type="application/javascript">
+    $(function(){
+        $('.editor').summernote({
+            placeholder: '공백만 있는 글은 허용되지 않습니다.',
+            tabSize: 2,
+            height: 300
+        });
+    })
 </script>
 </html>
