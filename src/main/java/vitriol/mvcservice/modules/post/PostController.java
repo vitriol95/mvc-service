@@ -49,6 +49,7 @@ public class PostController {
             model.addAttribute(account);
             return "redirect:/";
         }
+        model.addAttribute(account);
         model.addAttribute("post", post);
         return "post/view";
     }
