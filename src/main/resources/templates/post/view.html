@@ -16,12 +16,12 @@
             <div class="lh-200" th:if="${post.isWriter(#authentication.principal)}">
                 <form class="form-inline" th:if="${post.isWriter(#authentication.principal)}" action="#" th:action="@{'/posts/' + ${post.getId()} + '/update'}" method="get" novalidate>
                     <div class="form-group">
-                        <button class="btn btn-outline-primary" type="submit">수정</button>
+                        <button name="update" class="btn btn-outline-primary" type="submit">수정</button>
                     </div>
                 </form>
                 <form class="form-inline" th:if="${post.isWriter(#authentication.principal)}" action="#" th:action="@{'/posts/' + ${post.getId()} + '/delete'}" method="post" novalidate>
                     <div class="form-group">
-                        <button class="btn btn-outline-danger" type="submit">삭제</button>
+                        <button name="delete" class="btn btn-outline-danger" type="submit">삭제</button>
                     </div>
                 </form>
             </div>
