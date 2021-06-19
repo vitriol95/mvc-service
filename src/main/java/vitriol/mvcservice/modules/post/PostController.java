@@ -47,6 +47,7 @@ public class PostController {
             model.addAttribute(account);
             return "redirect:/";
         }
+        model.addAttribute(account);
         model.addAttribute("post", post);
         return "post/view";
     }
@@ -60,12 +61,13 @@ public class PostController {
     }
 
     @PostMapping("/posts/{id}/update")
-    public String updatePostFromSubmit(@LoggedInUser Account account, @PathVariable Long id, @Valid NewPostForm newPostForm, Model model, Errors errors) {
+    public String updatePostFormSubmit(@LoggedInUser Account account, @PathVariable Long id, @Valid NewPostForm newPostForm, Model model, Errors errors) {
         Post post = postService.getPostToUpdate(id, account);
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "posts/" + id + "/update";
         }
+        model.addAttribute(account);
         postService.updatePost(post, newPostForm);
         return "redirect:/posts/" + id;
     }
