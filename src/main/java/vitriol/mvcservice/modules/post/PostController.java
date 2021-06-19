@@ -1,5 +1,4 @@
 package vitriol.mvcservice.modules.post;
-
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.LoggedInUser;
 import vitriol.mvcservice.modules.post.form.NewPostForm;
-
 import javax.validation.Valid;
 
 @Controller
