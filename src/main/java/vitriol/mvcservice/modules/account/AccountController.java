@@ -2,7 +2,6 @@ package vitriol.mvcservice.modules.account;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -62,8 +61,8 @@ public class AccountController {
     }
 
     @PostMapping("/settings")
-    public String updateProfile(@LoggedInUser Account account, @Valid @ModelAttribute ProfileForm profileForm, Errors errors,
-                                Model model, RedirectAttributes redirectAttributes) {
+    public String updateProfile(@LoggedInUser Account account, Model model, @Valid @ModelAttribute ProfileForm profileForm, Errors errors,
+                                 RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "account/settings";

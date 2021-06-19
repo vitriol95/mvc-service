@@ -14,11 +14,11 @@
             </div>
 
             <div class="lh-200" th:if="${post.isWriter(#authentication.principal)}">
-                <form class="form-inline" th:if="${post.isWriter(#authentication.principal)}" action="#" th:action="@{'/posts/' + ${post.getId()} + '/update'}" method="get" novalidate>
-                    <div class="form-group">
-                        <button name="update" class="btn btn-outline-primary" type="submit">수정</button>
-                    </div>
-                </form>
+
+                <div class="form-group mb-0">
+                    <a th:href="@{'/posts/'+${post.getId()}+'/update'}"><button name="update" class="btn btn-outline-primary" type="submit">수정</button></a>
+                </div>
+
                 <form class="form-inline" th:if="${post.isWriter(#authentication.principal)}" action="#" th:action="@{'/posts/' + ${post.getId()} + '/delete'}" method="post" novalidate>
                     <div class="form-group">
                         <button name="delete" class="btn btn-outline-danger" type="submit">삭제</button>

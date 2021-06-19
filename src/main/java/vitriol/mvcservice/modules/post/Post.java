@@ -6,9 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.UserAccount;
+import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.superclass.LocalDateTimeEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,6 +32,9 @@ public class Post extends LocalDateTimeEntity {
 
     private String title;
     private String introduction;
+
+    @OneToMany(mappedBy = "post")
+    private Set<Reply> replies = new HashSet<>();
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

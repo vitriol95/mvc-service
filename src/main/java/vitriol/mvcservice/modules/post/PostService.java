@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import vitriol.mvcservice.modules.account.Account;
+import vitriol.mvcservice.modules.account.AccountRepository;
 import vitriol.mvcservice.modules.post.form.NewPostForm;
 
 import javax.transaction.Transactional;
@@ -15,12 +16,15 @@ import javax.transaction.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
 
     public Post createNewPost(Post newPost, Account account) {
 
+        Account writer = accountRepository.findByEmail(account.getEmail());
+        // Detached 상태인 애를 데려오기
         Post post = postRepository.save(newPost);
-        post.setWriter(account);
+        post.setWriter(writer);
         return post;
     }
 

@@ -34,7 +34,6 @@ public class PostController {
             model.addAttribute(account);
             return "post/form";
         }
-
         Post post = postService.createNewPost(modelMapper.map(newPostForm, Post.class), account);
         return "redirect:/posts/" + post.getId();
     }
@@ -43,7 +42,6 @@ public class PostController {
     public String postView(@LoggedInUser Account account, @PathVariable("id") Long id, Model model) {
         Post post = postRepository.findPostWithUserAndRepliesById(id);
         if (!post.isOpen()) {
-            // TODO 에러페이지
             model.addAttribute(account);
             return "redirect:/";
         }
@@ -56,17 +54,21 @@ public class PostController {
     public String updatePostFormView(@LoggedInUser Account account, @PathVariable Long id, Model model) {
         Post post = postService.getPostToUpdate(id, account);
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(post, NewPostForm.class));
+        NewPostForm map = modelMapper.map(post, NewPostForm.class);
+        model.addAttribute("newPostForm",map);
         return "post/update";
     }
 
     @PostMapping("/posts/{id}/update")
-    public String updatePostFormSubmit(@LoggedInUser Account account, @PathVariable Long id, @Valid NewPostForm newPostForm, Model model, Errors errors) {
+    public String updatePostFormSubmit(@LoggedInUser Account account, @PathVariable Long id, Model model, @Valid NewPostForm newPostForm, Errors errors) {
+        // Param 순서 중요하나봐.. Model이 먼저와야되구나...
         Post post = postService.getPostToUpdate(id, account);
+
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return "posts/" + id + "/update";
+            return "post/update";
         }
+
         model.addAttribute(account);
         postService.updatePost(post, newPostForm);
         return "redirect:/posts/" + id;
