@@ -28,6 +28,10 @@ public class PostService {
         return post;
     }
 
+    public Post getVanillaPost(Long id) {
+        return postRepository.findPostById(id);
+    }
+
     public Post getPostToUpdate(Long id, Account account) {
         Post post = postRepository.findPostWithAccountById(id);
         validateWriter(account, post);

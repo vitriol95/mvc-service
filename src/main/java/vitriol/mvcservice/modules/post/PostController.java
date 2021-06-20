@@ -1,15 +1,19 @@
 package vitriol.mvcservice.modules.post;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.LoggedInUser;
 import vitriol.mvcservice.modules.post.form.NewPostForm;
+import vitriol.mvcservice.modules.reply.Reply;
+import vitriol.mvcservice.modules.reply.ReplyRepository;
+import vitriol.mvcservice.modules.reply.ReplyService;
+import vitriol.mvcservice.modules.reply.form.NewReplyForm;
+
 import javax.validation.Valid;
 
 @Controller
@@ -19,6 +23,7 @@ public class PostController {
     private final PostService postService;
     private final ModelMapper modelMapper;
     private final PostRepository postRepository;
+    private final ReplyService replyService;
 
     @GetMapping("/new-post")
     public String newPostForm(@LoggedInUser Account account, Model model) {
@@ -47,7 +52,16 @@ public class PostController {
         }
         model.addAttribute(account);
         model.addAttribute("post", post);
+        model.addAttribute(new NewReplyForm());
         return "post/view";
+    }
+
+    @PostMapping("/posts/{id}/reply")
+    @ResponseBody
+    public ResponseEntity replyFormSubmit(@PathVariable Long id, @LoggedInUser Account account, @RequestBody NewReplyForm newReplyForm) {
+        Post post = postService.getVanillaPost(id);
+        replyService.createNewReply(modelMapper.map(newReplyForm, Reply.class), post, account);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/posts/{id}/update")
@@ -55,7 +69,7 @@ public class PostController {
         Post post = postService.getPostToUpdate(id, account);
         model.addAttribute(account);
         NewPostForm map = modelMapper.map(post, NewPostForm.class);
-        model.addAttribute("newPostForm",map);
+        model.addAttribute("newPostForm", map);
         return "post/update";
     }
 

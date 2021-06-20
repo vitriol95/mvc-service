@@ -40,24 +40,107 @@
 
         </div>
 
-        <div class="my-3 p-3 bg-white rounded shadow-sm">
+        <div id="comments" th:fragment="comments" class="my-3 p-3 bg-white rounded shadow-sm">
+
             <h6 class="border-bottom border-gray pb-2 mb-0"><strong>코멘트</strong></h6>
-            <div class="media text-muted pt-3">
-                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+
+            <div class="media text-muted pt-3" th:each="reply: ${post.replies}">
+
+                <svg class="bd-placeholder-img mr-2 rounded" th:if="${#strings.isEmpty(reply.account?.profileImage)}" data-jdenticon-value="user111" th:data-jdenticon-value="${reply.account.email}"
+                     width="32" height="32"></svg>
+                <img th:if="${!#strings.isEmpty(reply.account?.profileImage)}" th:src="${reply.account.profileImage}"
+                     width="32" height="32" class="bd-placeholder-img mr-2 rounded">
 
                 <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                     <div class="d-flex justify-content-between align-items-center w-100">
-                        <strong class="text-gray-dark">Full Name</strong>
-                        <a href="#">Follow</a>
+                        <strong class="text-gray-dark" th:text="${reply.account.nickname}">Full Name</strong>
+                        <span>
+                            <a th:href="@{'/post/'+ ${post.getId()}+'/reply/'+${reply.getId()}+'/update'}" th:if="${reply.isWriter(#authentication.principal)}">수정</a>
+                            <a href="#" th:if="${reply.isWriter(#authentication.principal)}">삭제</a>
+                        </span>
                     </div>
-                    <span class="d-block">@username</span>
+                    <span th:text="${#temporals.format(reply.modifiedDate,'yyyy-MM-dd HH:mm')}">@username</span>
+                    <div class="mt-1 text-dark"  th:utext="${reply.description}">
+                    </div>
                 </div>
             </div>
+
 
             <small class="d-block text-right mt-3">
                 <a href="#">All suggestions</a>
             </small>
+
+            <div class="needs-validation col-sm-10">
+                <div class="form-group">
+                    <label for="replyDescription">코멘트 작성</label>
+                    <textarea id="replyDescription" class="editor form-control" placeholder="본문을 작성해주세요"
+                              aria-describedby="replyDescriptionHelp" required minlength="2"></textarea>
+                    <small id="replyDescriptionHelp" class="form-text text-muted">
+                        매너를 지켜 작성해주세요.
+                    </small>
+                    <small class="invalid-feedback">2글자 이상이 와야합니다.</small>
+                </div>
+
+                <div class="form-group">
+                    <button id="replySave" class="btn btn-primary btn-block" type="button">코멘트 달기</button>
+                </div>
+            </div>
         </div>
     </main>
+    <script th:replace="fragments.html :: form-validation"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script th:fragment="summerNote" type="application/javascript">
+        $(function(){
+            $('.editor').summernote({
+                placeholder: '공백만 있는 글은 허용되지 않습니다.',
+                tabSize: 2,
+                height: 100
+            });
+        })
+    </script>
+    <script type="application/javascript" th:inline="javascript">
+        $(function() {
+            var csrfToken = /*[[${_csrf.token}]]*/ null;
+            var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+            $(document).ajaxSend(function (e, xhr, options) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            });
+        });
+    </script>
+    <script>
+        let index = {
+            init: function () {
+                $("#replySave").on("click", () => {
+                    this.replySave();
+                });
+            },
+
+            replySave: function () {
+                let comment = document.querySelector("#comments");
+                let postId = [[${post.id}]];
+                let data = {
+                    description: $("#replyDescription").val()
+                };
+
+                $.ajax({
+                    dataType: "json",
+                    contentType: "application/json; charset=utf8",
+                    method: "POST",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true
+                    },
+                    url: "/posts/" + String(postId) + "/reply",
+                    data: JSON.stringify(data),
+                }).done(function (response) {
+                    console.log("OK");
+                     ``
+                });
+            }
+        }
+        index.init();
+    </script>
+
 </body>
 </html>

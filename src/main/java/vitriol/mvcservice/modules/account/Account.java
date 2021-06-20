@@ -1,9 +1,12 @@
 package vitriol.mvcservice.modules.account;
 import lombok.*;
 import vitriol.mvcservice.modules.post.Post;
+import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.superclass.LocalDateTimeEntity;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,4 +36,8 @@ public class Account extends LocalDateTimeEntity {
 
     @OneToMany(mappedBy = "account")
     private Set<Post> posts = new HashSet<>();
+
+    @OneToMany(mappedBy = "account")
+    private List<Reply> replies = new ArrayList<>();
+
 }

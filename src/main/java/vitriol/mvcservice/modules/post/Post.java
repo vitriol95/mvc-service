@@ -8,12 +8,8 @@ import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.UserAccount;
 import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.superclass.LocalDateTimeEntity;
-
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -34,7 +30,7 @@ public class Post extends LocalDateTimeEntity {
     private String introduction;
 
     @OneToMany(mappedBy = "post")
-    private Set<Reply> replies = new HashSet<>();
+    private List<Reply> replies = new ArrayList<>();
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
