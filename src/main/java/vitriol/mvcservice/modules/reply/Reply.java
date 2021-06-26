@@ -29,8 +29,6 @@ public class Reply extends LocalDateTimeEntity {
     @Lob
     private String description;
 
-    private boolean open;
-
     public boolean isWriter(UserAccount userAccount) {
         return this.account.equals(userAccount.getAccount());
     }

@@ -53,10 +53,14 @@
 
                 <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                     <div class="d-flex justify-content-between align-items-center w-100">
+                        <div th:text="${reply.id}" style="display: none"></div>
                         <strong class="text-gray-dark" th:text="${reply.account.nickname}">Full Name</strong>
                         <span>
-                            <a th:href="@{'/post/'+ ${post.getId()}+'/reply/'+${reply.getId()}+'/update'}" th:if="${reply.isWriter(#authentication.principal)}">수정</a>
-                            <a href="#" th:if="${reply.isWriter(#authentication.principal)}">삭제</a>
+                            <form class="form-inline" th:if="${reply.isWriter(#authentication.principal)}" th:action="@{'/posts/' + ${post.getId()} + '/reply/' +${reply.getId()}+'/delete'}" method="post" novalidate>
+                                <div class="form-group">
+                                    <button name="delete" class="btn btn-link btn-sm" type="submit">삭제</button>
+                                </div>
+                            </form>
                         </span>
                     </div>
                     <span th:text="${#temporals.format(reply.modifiedDate,'yyyy-MM-dd HH:mm')}">@username</span>
@@ -73,7 +77,7 @@
             <div class="needs-validation col-sm-10">
                 <div class="form-group">
                     <label for="replyDescription">코멘트 작성</label>
-                    <textarea id="replyDescription" class="editor form-control" placeholder="본문을 작성해주세요"
+                    <textarea name="replyDescription" id="replyDescription" class="editor form-control" placeholder="본문을 작성해주세요"
                               aria-describedby="replyDescriptionHelp" required minlength="2"></textarea>
                     <small id="replyDescriptionHelp" class="form-text text-muted">
                         매너를 지켜 작성해주세요.
@@ -115,32 +119,23 @@
                     this.replySave();
                 });
             },
-
             replySave: function () {
-                let comment = document.querySelector("#comments");
+                let description = $("#replyDescription").val();
                 let postId = [[${post.id}]];
-                let data = {
-                    description: $("#replyDescription").val()
-                };
-
+                let data = {description: description};
                 $.ajax({
-                    dataType: "json",
                     contentType: "application/json; charset=utf8",
                     method: "POST",
-                    autocomplete: {
-                        enabled: true,
-                        rightKey: true
-                    },
                     url: "/posts/" + String(postId) + "/reply",
                     data: JSON.stringify(data),
                 }).done(function (response) {
-                    console.log("OK");
-                     ``
+                    location.reload();
+                }).fail(function (a,b,c) {
+                    alert(c)
                 });
             }
-        }
+        };
         index.init();
     </script>
-
 </body>
 </html>

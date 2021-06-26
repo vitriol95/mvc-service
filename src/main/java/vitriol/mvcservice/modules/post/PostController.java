@@ -56,12 +56,19 @@ public class PostController {
         return "post/view";
     }
 
-    @PostMapping("/posts/{id}/reply")
+    @PostMapping(value = "/posts/{id}/reply")
     @ResponseBody
     public ResponseEntity replyFormSubmit(@PathVariable Long id, @LoggedInUser Account account, @RequestBody NewReplyForm newReplyForm) {
         Post post = postService.getVanillaPost(id);
         replyService.createNewReply(modelMapper.map(newReplyForm, Reply.class), post, account);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/posts/{postId}/reply/{replyId}/delete")
+    @ResponseBody
+    public ResponseEntity replyDelete(@PathVariable("postId") Long id, @LoggedInUser Account account, @PathVariable("replyId") Long replyId) {
+        Post post = postService.getVanillaPost(id);
+        replyService.deleteReply()
     }
 
     @GetMapping("/posts/{id}/update")
@@ -75,7 +82,7 @@ public class PostController {
 
     @PostMapping("/posts/{id}/update")
     public String updatePostFormSubmit(@LoggedInUser Account account, @PathVariable Long id, Model model, @Valid NewPostForm newPostForm, Errors errors) {
-        // Param 순서 중요하나봐.. Model이 먼저와야되구나...
+        // Param 순서 중요함. Model이 먼저와야되구나...
         Post post = postService.getPostToUpdate(id, account);
 
         if (errors.hasErrors()) {
