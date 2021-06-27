@@ -34,4 +34,7 @@ public class Reply extends LocalDateTimeEntity {
     }
 
 
+    public void removeTrace() {
+        this.account.replyRemove();
+    }
 }

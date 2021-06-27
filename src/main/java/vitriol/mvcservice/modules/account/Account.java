@@ -37,7 +37,23 @@ public class Account extends LocalDateTimeEntity {
     @OneToMany(mappedBy = "account")
     private Set<Post> posts = new HashSet<>();
 
+    private Long postCount = 0L;
+
     @OneToMany(mappedBy = "account")
     private List<Reply> replies = new ArrayList<>();
 
+    private Long replyCount = 0L;
+
+    public void postAdd() {
+        this.postCount++;
+    }
+    public void postRemove() {
+        this.postCount--;
+    }
+    public void replyAdd() {
+        this.replyCount++;
+    }
+    public void replyRemove() {
+        this.replyCount--;
+    }
 }

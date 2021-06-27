@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import vitriol.mvcservice.modules.account.QAccount;
-import vitriol.mvcservice.modules.reply.QReply;
 
 public class PostRepositoryExImpl extends QuerydslRepositorySupport implements PostRepositoryEx {
 
@@ -26,13 +25,9 @@ public class PostRepositoryExImpl extends QuerydslRepositorySupport implements P
         QueryResults<Post> fetchResults = pageableQuery.fetchResults();
         return new PageImpl<>(fetchResults.getResults(), pageable, fetchResults.getTotal());
     }
-
-    @Override
-    public Post findPostWithUserAndRepliesById(Long id) {
-        QPost post = QPost.post;
-        QReply reply = QReply.reply;
-        from(post).where(post.id.eq(id))
-                .leftJoin(post.account, QAccount.account).fetchJoin()
-                .leftJoin(post.replies, reply).fetchJoin();
-    }
+//
+//    @Override
+//    public Post findPostWithUserAndRepliesById(Long id) {
+//
+//    }
 }

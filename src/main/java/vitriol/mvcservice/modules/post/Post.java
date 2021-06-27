@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.UserAccount;
 import vitriol.mvcservice.modules.reply.Reply;
@@ -62,5 +61,9 @@ public class Post extends LocalDateTimeEntity {
 
     public void removeReply() {
         this.replyCount--;
+    }
+
+    public void removeTrace() {
+        this.account.postRemove();
     }
 }

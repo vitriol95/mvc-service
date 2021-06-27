@@ -10,5 +10,4 @@ public interface PostRepositoryEx {
 
     Page<Post> findByKeyword(String keyword, Pageable pageable);
 
-    Post findPostWithUserAndRepliesById(Long id);
 }

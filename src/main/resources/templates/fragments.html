@@ -14,6 +14,21 @@
         .container {
             max-width: 90%;
         }
+
+        mark {
+            padding: 0;
+            background: transparent;
+            background: linear-gradient(to right, #f0ad4e 50%, transparent 50%);
+            background-position: right bottom;
+            background-size: 200% 100%;
+            transition: all .5s ease;
+            color: #cdc415;
+        }
+
+        mark.animate {
+            background-position: left bottom;
+            color: #000;
+        }
     </style>
 </head>
 
@@ -32,7 +47,7 @@
                 <a class="nav-link" href="/sign-up">회원 가입</a>
             </li>
             <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" href="#">유저 검색</a>
+                <a class="nav-link" href="/accounts">유저 목록</a>
             </li>
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,10 +73,10 @@
             </li>
 
             <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{/info}"><span th:text="${#authentication.getPrincipal().getAccount().getNickname()}" style="color: blue">UserEmail</span>님 환영합니다.</a>
+                <a class="nav-link"><span th:text="${#authentication.getPrincipal().getAccount().getNickname()}" style="color: blue">UserEmail</span>님 환영합니다.</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" th:action="@{/search/post}" method="get" th:if="${#request.getRequestURI().equals('/')}">
+        <form class="form-inline my-2 my-lg-0" th:action="@{/search/post}" method="get">
             <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="게시글 검색">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>

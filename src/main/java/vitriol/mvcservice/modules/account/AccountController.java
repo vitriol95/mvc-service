@@ -2,6 +2,10 @@ package vitriol.mvcservice.modules.account;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,12 +21,14 @@ import vitriol.mvcservice.modules.account.validator.ProfileFormValidator;
 import vitriol.mvcservice.modules.account.validator.SignUpFormValidator;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
 
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
     private final SignUpFormValidator signUpFormValidator;
     private final ProfileFormValidator profileFormValidator;
     private final ModelMapper modelMapper;
@@ -62,7 +68,7 @@ public class AccountController {
 
     @PostMapping("/settings")
     public String updateProfile(@LoggedInUser Account account, Model model, @Valid @ModelAttribute ProfileForm profileForm, Errors errors,
-                                 RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "account/settings";
@@ -70,5 +76,13 @@ public class AccountController {
         accountService.updateProfile(account, profileForm);
         redirectAttributes.addFlashAttribute("message", "수정을 완료하였습니다");
         return "redirect:" + "/settings";
+    }
+
+    @GetMapping("/accounts")
+    public String allAccountView(@PageableDefault(size = 20, sort = "postCount", direction = Sort.Direction.DESC) Pageable pageable, @LoggedInUser Account account, Model model) {
+        Page<Account> accountPage = accountRepository.findAll(pageable);
+        model.addAttribute(account);
+        model.addAttribute("accountPage", accountPage);
+        return "account/all";
     }
 }

@@ -38,11 +38,15 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final StringPath password = createString("password");
 
+    public final NumberPath<Long> postCount = createNumber("postCount", Long.class);
+
     public final SetPath<vitriol.mvcservice.modules.post.Post, vitriol.mvcservice.modules.post.QPost> posts = this.<vitriol.mvcservice.modules.post.Post, vitriol.mvcservice.modules.post.QPost>createSet("posts", vitriol.mvcservice.modules.post.Post.class, vitriol.mvcservice.modules.post.QPost.class, PathInits.DIRECT2);
 
     public final StringPath profileImage = createString("profileImage");
 
     public final ListPath<vitriol.mvcservice.modules.reply.Reply, vitriol.mvcservice.modules.reply.QReply> replies = this.<vitriol.mvcservice.modules.reply.Reply, vitriol.mvcservice.modules.reply.QReply>createList("replies", vitriol.mvcservice.modules.reply.Reply.class, vitriol.mvcservice.modules.reply.QReply.class, PathInits.DIRECT2);
+
+    public final NumberPath<Long> replyCount = createNumber("replyCount", Long.class);
 
     public QAccount(String variable) {
         super(Account.class, forVariable(variable));

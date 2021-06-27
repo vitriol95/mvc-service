@@ -27,6 +27,7 @@ public class PostService {
         Account writer = accountRepository.findByEmail(account.getEmail());
         // Detached 상태인 애를 데려오기
         Post post = postRepository.save(newPost);
+        writer.postAdd();
         post.setWriter(writer);
         return post;
     }
@@ -52,6 +53,7 @@ public class PostService {
     }
 
     public void deletePost(Post post) {
+        post.removeTrace();
         postRepository.delete(post);
     }
 
@@ -59,13 +61,15 @@ public class PostService {
         Account writer = accountRepository.findByEmail(account.getEmail());
         // detached 살려오기
 
-        post.setWriter(writer);
+        reply.setAccount(writer);
         post.addReply(reply);
+        writer.replyAdd();
         replyRepository.save(reply);
     }
 
     public void deleteReply(Reply reply, Post post) {
         post.removeReply();
+        reply.removeTrace();
         replyRepository.delete(reply);
     }
 }

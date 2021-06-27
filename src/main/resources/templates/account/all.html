@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html :: head"></head>
+<body>
+    <nav th:replace="fragments.html :: main-nav"></nav>
+
+    <div class="py-5 text-center">
+        <p class="lead">Vitriol's Account</p>
+        <h2>
+            전체 유저보기 - <span>총 <span th:text="${accountPage.getTotalElements()}"></span>명의 유저가 활동중입니다.</span>
+        </h2>
+        <small class="text-info">현재는 검색으로 유저를 찾으실 수 없습니다.</small>
+    </div>
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Icon</th>
+                <th scope="col">닉네임</th>
+                <th scope="col">게시글 수</th>
+                <th scope="col">댓글 수</th>
+                <th scope="col">가입 날짜</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="account : ${accountPage.getContent()}">
+                <td><svg th:if="${#strings.isEmpty(account.profileImage)}" data-jdenticon-value="user111" th:data-jdenticon-value="${account.email}"
+                         width="32" height="32" class="rounded boarder bg-light"></svg>
+                    <img th:if="${!#strings.isEmpty(account.profileImage)}" th:src="${account.profileImage}"
+                         width="32" height="32" class="rounded boarder bg-light"></td>
+                <td th:text="${account.nickname}"></td>
+                <td th:text="${account.postCount}"></td>
+                <td th:text="${account.replyCount}"></td>
+                <td th:text="${#temporals.format(account.createdDate,'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="row justify-content-center">
+            <div class="col-sm-10">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!accountPage.hasPrevious()}? disabled">
+                            <a th:href="@{'/accounts&page=' + ${accountPage.getNumber() - 1}}"
+                               class="page-link" tabindex="-1" aria-disabled="true">
+                                Previous
+                            </a>
+                        </li>
+                        <li class="page-item" th:classappend="${i == accountPage.getNumber()}? active" th:each="i: ${#numbers.sequence(0, accountPage.getTotalPages() - 1)}">
+                            <a th:href="@{'/accounts&page=' + ${i}}" class="page-link" href="#" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!accountPage.hasNext()}? disabled">
+                            <a th:href="@{'/accounts&page=' + ${accountPage.getNumber() + 1}}" class="page-link">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
