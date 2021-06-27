@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.AccountRepository;
 import vitriol.mvcservice.modules.post.form.NewPostForm;
+import vitriol.mvcservice.modules.reply.Reply;
+import vitriol.mvcservice.modules.reply.ReplyRepository;
 
 import javax.transaction.Transactional;
 
@@ -18,6 +20,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
+    private final ReplyRepository replyRepository;
 
     public Post createNewPost(Post newPost, Account account) {
 
@@ -50,5 +53,19 @@ public class PostService {
 
     public void deletePost(Post post) {
         postRepository.delete(post);
+    }
+
+    public void createNewReply(Reply reply, Post post, Account account) {
+        Account writer = accountRepository.findByEmail(account.getEmail());
+        // detached 살려오기
+
+        post.setWriter(writer);
+        post.addReply(reply);
+        replyRepository.save(reply);
+    }
+
+    public void deleteReply(Reply reply, Post post) {
+        post.removeReply();
+        replyRepository.delete(reply);
     }
 }

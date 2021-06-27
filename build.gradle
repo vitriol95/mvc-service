@@ -33,10 +33,30 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    /** query DSL*/
+    compile "com.querydsl:querydsl-jpa"
+    compile "com.querydsl:querydsl-core"
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" // querydsl JPAAnnotationProcessor 사용 지정
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api:2.2.3"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api:1.3.5"
 }
+
+def generated='src/main/generated'
+sourceSets {
+    main.java.srcDirs += [ generated ]
+}
+
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file(generated)
+}
+
+clean.doLast {
+    file(generated).deleteDir()
+}
+
 
 test {
     useJUnitPlatform()
 }
-
 

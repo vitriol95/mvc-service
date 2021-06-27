@@ -53,7 +53,6 @@
 
                 <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                     <div class="d-flex justify-content-between align-items-center w-100">
-                        <div th:text="${reply.id}" style="display: none"></div>
                         <strong class="text-gray-dark" th:text="${reply.account.nickname}">Full Name</strong>
                         <span>
                             <form class="form-inline" th:if="${reply.isWriter(#authentication.principal)}" th:action="@{'/posts/' + ${post.getId()} + '/reply/' +${reply.getId()}+'/delete'}" method="post" novalidate>

@@ -24,6 +24,7 @@ public class PostController {
     private final ModelMapper modelMapper;
     private final PostRepository postRepository;
     private final ReplyService replyService;
+    private final ReplyRepository replyRepository;
 
     @GetMapping("/new-post")
     public String newPostForm(@LoggedInUser Account account, Model model) {
@@ -60,15 +61,16 @@ public class PostController {
     @ResponseBody
     public ResponseEntity replyFormSubmit(@PathVariable Long id, @LoggedInUser Account account, @RequestBody NewReplyForm newReplyForm) {
         Post post = postService.getVanillaPost(id);
-        replyService.createNewReply(modelMapper.map(newReplyForm, Reply.class), post, account);
+        postService.createNewReply(modelMapper.map(newReplyForm, Reply.class), post, account);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/posts/{postId}/reply/{replyId}/delete")
-    @ResponseBody
-    public ResponseEntity replyDelete(@PathVariable("postId") Long id, @LoggedInUser Account account, @PathVariable("replyId") Long replyId) {
+    public String deleteReplySubmit(@PathVariable("postId") Long id, @LoggedInUser Account account, @PathVariable("replyId") Long replyId) {
         Post post = postService.getVanillaPost(id);
-        replyService.deleteReply()
+        Reply reply = replyRepository.findReplyById(replyId);
+        postService.deleteReply(reply, post);
+        return "redirect:/posts/" + id;
     }
 
     @GetMapping("/posts/{id}/update")

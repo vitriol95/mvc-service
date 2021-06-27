@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://thymeleaf.org/extras/spring-security">
+<head th:replace="fragments.html :: head"></head>
+<body>
+<nav th:replace="fragments.html :: main-nav"></nav>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <p class="lead" th:if="${postPage.getTotalElements() == 0}">
+            <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 게시글이 없습니다.
+        </p>
+        <p class="lead" th:if="${postPage.getTotalElements() > 0}">
+            <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 스터디를
+            <span th:text="${postPage.getTotalElements()}"></span>개
+            찾았습니다.
+        </p>
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                검색 결과 정렬 방식
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" th:classappend="${#strings.equals(sortProperty, 'createdDate')}? active"
+                   th:href="@{'/search/post?sort=createdDate,desc&keyword=' + ${keyword}}">
+                    게시글 최신순
+                </a>
+                <a class="dropdown-item" th:classappend="${#strings.equals(sortProperty, 'replyCount')}? active"
+                   th:href="@{'/search/study?sort=replyCount,desc&keyword=' + ${keyword}}">
+                    댓글 수
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <div class="row">
+                <div class="col-md-4" th:each="post: ${postPage.getContent()}">
+                    <div class="card mb-4 shadow-sm">
+                        <img src="/img/ffff0.JPG" class="context card-img-top" th:alt="${post.title}" >
+                        <div class="card-body">
+                            <a th:href="@{'/posts/' + ${post.id}}" class="text-decoration-none">
+                                <h5 class="card-title context" th:text="${post.title}"></h5>
+                                <h6 class="card-title" th:text="${post.replyCount}"></h6>
+                            </a>
+                            <p class="card-text" th:text="${post.introduction}">Introduction</p>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>
+                                    <svg th:if="${#strings.isEmpty(post.account?.profileImage)}" data-jdenticon-value="user111" th:data-jdenticon-value="${post.account.email}"
+                                         width="20" height="20" class="rounded boarder bg-light"></svg>
+                                    <img th:if="${!#strings.isEmpty(post.account?.profileImage)}" th:src="${post.account.profileImage}"
+                                         width="20" height="20" class="rounded boarder bg-light">
+                                    <span class="lh-100 h6 mb-0" th:text="${post.account.nickname}"></span>
+                                </span>
+                                <small class="text-muted date" th:text="${#temporals.format(post.modifiedDate,'yyyy-MM-dd HH:mm')}"></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-10">
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${!postPage.hasPrevious()}? disabled">
+                        <a th:href="@{'/search/post?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + ',desc&page=' + ${postPage.getNumber() - 1}}"
+                           class="page-link" tabindex="-1" aria-disabled="true">
+                            Previous
+                        </a>
+                    </li>
+                    <li class="page-item" th:classappend="${i == postPage.getNumber()}? active" th:each="i: ${#numbers.sequence(0, postPage.getTotalPages() - 1)}">
+                        <a th:href="@{'/search/post?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + ',desc&page=' + ${i}}"
+                           class="page-link" href="#" th:text="${i + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!postPage.hasNext()}? disabled">
+                        <a th:href="@{'/search/study?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + ',desc&page=' + ${postPage.getNumber() + 1}}"
+                           class="page-link">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

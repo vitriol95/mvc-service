@@ -4,12 +4,14 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
-public interface PostRepository extends JpaRepository<Post, Long> {
+import java.util.List;
 
-    // TODO: Reply 까지 Fetch 해야함
-    @EntityGraph(attributePaths = {"description","account","replies"}, type = EntityGraph.EntityGraphType.LOAD)
-    Post findPostWithUserAndRepliesById(Long id);
+@Transactional(readOnly = true)
+public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryEx {
+
+    // TODO: Reply 내의 Account 까지 fetch 해야함
+//    @EntityGraph(attributePaths = {"description","account","replies"}, type = EntityGraph.EntityGraphType.LOAD)
+//    Post findPostWithUserAndRepliesById(Long id);
 
     @EntityGraph(attributePaths = "account",type = EntityGraph.EntityGraphType.LOAD)
     Post findPostWithAccountById(Long id);
@@ -18,4 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @EntityGraph(attributePaths = "replies", type = EntityGraph.EntityGraphType.LOAD)
     Post findPostWithRepliesById(Long id);
+
+    List<Post> findFirst12ByOpenOrderByCreatedDateDesc(boolean b);
 }

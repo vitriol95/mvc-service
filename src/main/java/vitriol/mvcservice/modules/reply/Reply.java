@@ -33,13 +33,5 @@ public class Reply extends LocalDateTimeEntity {
         return this.account.equals(userAccount.getAccount());
     }
 
-    public void postedOn(Post post) {
-        this.post = post;
-        post.getReplies().add(this);
-    }
 
-    public void setWriter(Account account) {
-        this.account = account;
-        account.getReplies().add(this);
-    }
 }

@@ -61,8 +61,8 @@
                 <a class="nav-link" th:href="@{/info}"><span th:text="${#authentication.getPrincipal().getAccount().getNickname()}" style="color: blue">UserEmail</span>님 환영합니다.</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" th:if="${#request.getRequestURI().equals('/')}">
-            <input class="form-control mr-sm-2" type="search" placeholder="게시글 검색" aria-label="Search">
+        <form class="form-inline my-2 my-lg-0" th:action="@{/search/post}" method="get" th:if="${#request.getRequestURI().equals('/')}">
+            <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="게시글 검색">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
