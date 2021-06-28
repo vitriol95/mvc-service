@@ -9,7 +9,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryEx {
 
-    // TODO: Reply 내의 Account 까지 fetch 해야함
+    // TODO: Reply 내의 Account 까지 fetch 해야함 --> 필요없음. Reply내의 account는 이미 Fetch로 긁어온다.
     @EntityGraph(attributePaths = {"description","account","replies"}, type = EntityGraph.EntityGraphType.LOAD)
     Post findPostWithUserAndRepliesById(Long id);
 

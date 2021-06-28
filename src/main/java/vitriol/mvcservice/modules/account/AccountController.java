@@ -81,7 +81,7 @@ public class AccountController {
     @GetMapping("/accounts")
     public String allAccountView(@PageableDefault(size = 20, sort = "postCount", direction = Sort.Direction.DESC) Pageable pageable, @LoggedInUser Account account, Model model) {
         Page<Account> accountPage = accountRepository.findAll(pageable);
-        model.addAttribute(account);
+        model.addAttribute("account", account);
         model.addAttribute("accountPage", accountPage);
         return "account/all";
     }

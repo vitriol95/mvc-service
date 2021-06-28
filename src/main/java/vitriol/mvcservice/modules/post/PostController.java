@@ -66,7 +66,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/posts/{postId}/reply/{replyId}/delete")
-    public String deleteReplySubmit(@PathVariable("postId") Long id, @LoggedInUser Account account, @PathVariable("replyId") Long replyId) {
+    public String deleteReplySubmit(@PathVariable("postId") Long id, @PathVariable("replyId") Long replyId) {
         Post post = postService.getVanillaPost(id);
         Reply reply = replyRepository.findReplyById(replyId);
         postService.deleteReply(reply, post);

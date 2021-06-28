@@ -34,8 +34,9 @@ public class MainController {
     }
 
     @GetMapping("/search/post")
-    public String searchPost(@PageableDefault(size = 12, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable, String keyword, Model model) {
+    public String searchPost(@PageableDefault(size = 12, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable, @LoggedInUser Account account, String keyword, Model model) {
         Page<Post> postPage = postRepository.findByKeyword(keyword, pageable);
+        model.addAttribute(account);
         model.addAttribute("postPage", postPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("sortProperty", pageable.getSort().toString().contains("createdDate") ? "createdDate" : "replyCount");

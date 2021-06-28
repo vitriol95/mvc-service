@@ -31,7 +31,6 @@ public class Account extends LocalDateTimeEntity {
     private String bio;
 
     @Lob
-    @Basic(fetch = FetchType.EAGER)
     private String profileImage;
 
     @OneToMany(mappedBy = "account")

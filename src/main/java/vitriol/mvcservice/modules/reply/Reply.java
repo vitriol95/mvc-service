@@ -33,7 +33,6 @@ public class Reply extends LocalDateTimeEntity {
         return this.account.equals(userAccount.getAccount());
     }
 
-
     public void removeTrace() {
         this.account.replyRemove();
     }

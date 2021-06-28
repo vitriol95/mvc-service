@@ -24,15 +24,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="account : ${accountPage.getContent()}">
-                <td><svg th:if="${#strings.isEmpty(account.profileImage)}" data-jdenticon-value="user111" th:data-jdenticon-value="${account.email}"
+            <tr th:each="all : ${accountPage.getContent()}">
+                <td><svg th:if="${#strings.isEmpty(all?.profileImage)}" th:data-jdenticon-value="${all.email}"
                          width="32" height="32" class="rounded boarder bg-light"></svg>
-                    <img th:if="${!#strings.isEmpty(account.profileImage)}" th:src="${account.profileImage}"
+                    <img th:if="${!#strings.isEmpty(all?.profileImage)}" th:src="${all.profileImage}"
                          width="32" height="32" class="rounded boarder bg-light"></td>
-                <td th:text="${account.nickname}"></td>
-                <td th:text="${account.postCount}"></td>
-                <td th:text="${account.replyCount}"></td>
-                <td th:text="${#temporals.format(account.createdDate,'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${all.nickname}"></td>
+                <td th:text="${all.postCount}"></td>
+                <td th:text="${all.replyCount}"></td>
+                <td th:text="${#temporals.format(all.createdDate,'yyyy-MM-dd HH:mm')}"></td>
             </tr>
             </tbody>
         </table>
@@ -41,16 +41,16 @@
                 <nav>
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${!accountPage.hasPrevious()}? disabled">
-                            <a th:href="@{'/accounts&page=' + ${accountPage.getNumber() - 1}}"
+                            <a th:href="@{'/accounts?page=' + ${accountPage.getNumber() - 1}}"
                                class="page-link" tabindex="-1" aria-disabled="true">
                                 Previous
                             </a>
                         </li>
                         <li class="page-item" th:classappend="${i == accountPage.getNumber()}? active" th:each="i: ${#numbers.sequence(0, accountPage.getTotalPages() - 1)}">
-                            <a th:href="@{'/accounts&page=' + ${i}}" class="page-link" href="#" th:text="${i + 1}">1</a>
+                            <a th:href="@{'/accounts?page=' + ${i}}" class="page-link" href="#" th:text="${i + 1}">1</a>
                         </li>
                         <li class="page-item" th:classappend="${!accountPage.hasNext()}? disabled">
-                            <a th:href="@{'/accounts&page=' + ${accountPage.getNumber() + 1}}" class="page-link">
+                            <a th:href="@{'/accounts?page=' + ${accountPage.getNumber() + 1}}" class="page-link">
                                 Next
                             </a>
                         </li>
