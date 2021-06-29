@@ -1,5 +1,6 @@
 package vitriol.mvcservice.modules.reply;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 import vitriol.mvcservice.modules.post.Post;
@@ -11,5 +12,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     List<Reply> findByPost(Post post);
 
+    @EntityGraph(attributePaths = "account")
     Reply findReplyById(Long id);
 }

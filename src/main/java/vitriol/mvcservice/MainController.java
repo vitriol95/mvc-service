@@ -24,7 +24,6 @@ public class MainController {
         if (account != null) {
             model.addAttribute(account);
         }
-        model.addAttribute("postList", postRepository.findFirst12ByOpenOrderByCreatedDateDesc(true));
         return "index";
     }
 

@@ -68,7 +68,7 @@ public class PostController {
     @PostMapping(value = "/posts/{postId}/reply/{replyId}/delete")
     public String deleteReplySubmit(@PathVariable("postId") Long id, @PathVariable("replyId") Long replyId) {
         Post post = postService.getVanillaPost(id);
-        Reply reply = replyRepository.findReplyById(replyId);
+        Reply reply = replyRepository.findReplyById(replyId); // Account 까지 Fetch 된상태에 해당한다.
         postService.deleteReply(reply, post);
         return "redirect:/posts/" + id;
     }
@@ -84,7 +84,7 @@ public class PostController {
 
     @PostMapping("/posts/{id}/update")
     public String updatePostFormSubmit(@LoggedInUser Account account, @PathVariable Long id, Model model, @Valid NewPostForm newPostForm, Errors errors) {
-        // Param 순서 중요함. Model이 먼저와야되구나...
+
         Post post = postService.getPostToUpdate(id, account);
 
         if (errors.hasErrors()) {
@@ -100,7 +100,7 @@ public class PostController {
     @PostMapping("/posts/{id}/delete")
     public String deletePostSubmit(@LoggedInUser Account account, @PathVariable Long id) {
         Post post = postService.getPostToUpdate(id, account);
-        postService.deletePost(post);
+        postService.deletePost(post, account);
         return "redirect:/";
     }
 }

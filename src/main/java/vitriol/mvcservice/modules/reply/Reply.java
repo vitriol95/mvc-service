@@ -33,7 +33,23 @@ public class Reply extends LocalDateTimeEntity {
         return this.account.equals(userAccount.getAccount());
     }
 
-    public void removeTrace() {
-        this.account.replyRemove();
+    /** 양방향 매핑 메서드 With Account */
+    public void setWriter(Account account) {
+        this.account = account;
+        account.replyAdd(this);
+    }
+    /** 양방향 매핑 메서드 With Account */
+    public void unsetWriter() {
+        this.account.replyRemove(this);
+    }
+
+    /** 양방향 매핑 메서드 With Post */
+    public void postedOn(Post post) {
+        this.post = post;
+        post.replyAdd(this);
+    }
+    /** 양방향 매핑 메서드 With Post */
+    public void depostedOn(Post post) {
+        post.replyRemove(this);
     }
 }

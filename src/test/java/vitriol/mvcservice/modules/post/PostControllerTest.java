@@ -143,7 +143,6 @@ class PostControllerTest {
         assertThat(body).contains("수정");
         assertThat(body).contains("삭제");
         // XPath로 바꾸어 검증해보는 건?
-        // TODO: 나중에 Reply 추가 되면 이 테스트또한 진행해 보아야함. + 비밀글 테스트 추가해야함
     }
 
     @WithUserDetails(value = "vitriol95@gmail.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)

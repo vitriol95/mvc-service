@@ -40,9 +40,15 @@ public class Post extends LocalDateTimeEntity {
 
     private boolean open;
 
+    /** 양방향 매핑 메서드 With Post*/
     public void setWriter(Account account) {
         this.account = account;
-        account.getPosts().add(this);
+        account.postAdd(this);
+    }
+
+    /** 양방향 매핑 메서드 With Post*/
+    public void unsetWriter(Account account) {
+        account.postRemove(this);
     }
 
     public boolean isWriter(UserAccount userAccount) {
@@ -53,17 +59,14 @@ public class Post extends LocalDateTimeEntity {
         return this.account.equals(account);
     }
 
-    public void addReply(Reply reply) {
+
+    public void replyAdd(Reply reply) {
         this.getReplies().add(reply);
-        reply.setPost(this);
         this.replyCount++;
     }
 
-    public void removeReply() {
+    public void replyRemove(Reply reply) {
+        this.getReplies().remove(reply);
         this.replyCount--;
-    }
-
-    public void removeTrace() {
-        this.account.postRemove();
     }
 }

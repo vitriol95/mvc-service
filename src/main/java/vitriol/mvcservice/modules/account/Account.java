@@ -43,16 +43,21 @@ public class Account extends LocalDateTimeEntity {
 
     private Long replyCount = 0L;
 
-    public void postAdd() {
+    public void postAdd(Post post) {
+        this.getPosts().add(post);
         this.postCount++;
     }
-    public void postRemove() {
+
+    public void postRemove(Post post) {
+        this.getPosts().remove(post);
         this.postCount--;
     }
-    public void replyAdd() {
+    public void replyAdd(Reply reply) {
+        this.getReplies().add(reply);
         this.replyCount++;
     }
-    public void replyRemove() {
+    public void replyRemove(Reply reply) {
+        this.getReplies().remove(reply);
         this.replyCount--;
     }
 }

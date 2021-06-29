@@ -21,5 +21,4 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
     @EntityGraph(attributePaths = "replies", type = EntityGraph.EntityGraphType.LOAD)
     Post findPostWithRepliesById(Long id);
 
-    List<Post> findFirst12ByOpenOrderByCreatedDateDesc(boolean b);
 }
