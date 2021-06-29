@@ -1,5 +1,9 @@
 package vitriol.mvcservice.modules.account;
 
+import org.hamcrest.collection.IsCollectionWithSize;
+import org.hamcrest.collection.IsIterableContainingInOrder;
+import org.hamcrest.collection.IsIterableWithSize;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,15 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import vitriol.mvcservice.modules.account.form.SignUpForm;
+import vitriol.mvcservice.modules.post.PostFactory;
+import vitriol.mvcservice.modules.post.PostService;
+import vitriol.mvcservice.modules.post.ReplyFactory;
 
 import javax.transaction.Transactional;
 
-
-import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -36,6 +44,14 @@ class AccountControllerTest {
     private AccountService accountService;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AccountFactory accountFactory;
+    @Autowired
+    private PostFactory postFactory;
+    @Autowired
+    private ReplyFactory replyFactory;
+    @Autowired
+    private PostService postService;
 
     @BeforeEach
     void beforeEach() {
@@ -201,4 +217,34 @@ class AccountControllerTest {
                 .andExpect(view().name("account/settings"));
     }
 
+    @WithUserDetails(value = "vitriol95@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("회원 전체 검색")
+    @Test
+    void 회원_전체_검색() throws Exception {
+
+        for (int i = 1; i <= 41; i++) {
+            accountFactory.newAccount("testAccount" + i);
+        } // 총 41 + 2 유저가 존재. 3페이지 분량 (20, 20, 3)
+
+        mockMvc.perform(get("/accounts"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/all"))
+                .andExpect(model().attributeExists("accountPage"))
+                .andExpect(model().attribute("accountPage", IsIterableWithSize.iterableWithSize(20)));
+
+        mockMvc.perform(get("/accounts?page=1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/all"))
+                .andExpect(model().attributeExists("accountPage"))
+                .andExpect(model().attribute("accountPage", IsIterableWithSize.iterableWithSize(20)));
+
+        mockMvc.perform(get("/accounts?page=2"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/all"))
+                .andExpect(model().attributeExists("accountPage"))
+                .andExpect(model().attribute("accountPage", IsIterableWithSize.iterableWithSize(3)));
+
+        assertThat(accountRepository.count()).isEqualTo(43L);
+
+    }
 }

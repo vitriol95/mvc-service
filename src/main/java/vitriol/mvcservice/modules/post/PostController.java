@@ -46,7 +46,7 @@ public class PostController {
 
     @GetMapping("/posts/{id}")
     public String postView(@LoggedInUser Account account, @PathVariable("id") Long id, Model model) {
-        Post post = postRepository.findPostWithUserAndRepliesById(id);
+        Post post = postRepository.findPostWithAccountAndRepliesById(id);
         if (!post.isOpen()) {
             model.addAttribute(account);
             return "redirect:/";
@@ -69,7 +69,8 @@ public class PostController {
     public String deleteReplySubmit(@PathVariable("postId") Long id, @PathVariable("replyId") Long replyId) {
         Post post = postService.getVanillaPost(id);
         Reply reply = replyRepository.findReplyById(replyId); // Account 까지 Fetch 된상태에 해당한다.
-        postService.deleteReply(reply, post);
+        Account account = reply.getAccount();
+        postService.deleteReply(reply, post, account);
         return "redirect:/posts/" + id;
     }
 
@@ -99,7 +100,7 @@ public class PostController {
 
     @PostMapping("/posts/{id}/delete")
     public String deletePostSubmit(@LoggedInUser Account account, @PathVariable Long id) {
-        Post post = postService.getPostToUpdate(id, account);
+        Post post = postService.getPostToDelete(id, account);
         postService.deletePost(post, account);
         return "redirect:/";
     }

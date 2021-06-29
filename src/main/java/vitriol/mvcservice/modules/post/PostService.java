@@ -24,12 +24,12 @@ public class PostService {
 
     public Post createNewPost(Post newPost, Account account) {
 
-        Account writer = accountRepository.findByEmail(account.getEmail());
-        // Detached 상태인 애를 데려오기
+//        Account writer = accountRepository.findByEmail(account.getEmail());
+        Account writer = accountRepository.findAccountWithPostsByEmail(account.getEmail());
+//         Detached 상태인 애를 데려오기
 
-        Post post = postRepository.save(newPost);
-        post.setWriter(writer);
-        return post;
+        newPost.setWriter(writer);
+        return postRepository.save(newPost);
     }
 
     public Post getVanillaPost(Long id) {
@@ -38,6 +38,12 @@ public class PostService {
 
     public Post getPostToUpdate(Long id, Account account) {
         Post post = postRepository.findPostWithAccountById(id);
+        validateWriter(account, post);
+        return post;
+    }
+
+    public Post getPostToDelete(Long id, Account account) {
+        Post post = postRepository.findPostWithUserAndRepliesById(id);
         validateWriter(account, post);
         return post;
     }
@@ -52,11 +58,19 @@ public class PostService {
         modelMapper.map(newPostForm, post);
     }
 
+//    public void deletePost(Post post, Account account) {
+//        Account writer = accountRepository.findByEmail(account.getEmail());
+//        // Detached
+//
+//        post.unsetWriter(writer);
+//        postRepository.delete(post);
+//    }
+
     public void deletePost(Post post, Account account) {
         Account writer = accountRepository.findByEmail(account.getEmail());
-        // Detached
 
         post.unsetWriter(writer);
+        post.getReplies().forEach(reply -> reply.unsetWriter(reply.getAccount()));
         postRepository.delete(post);
     }
 
@@ -69,11 +83,10 @@ public class PostService {
         replyRepository.save(reply);
     }
 
-    public void deleteReply(Reply reply, Post post) {
-//        Account writer = accountRepository.findByEmail(account.getEmail());
-        // 여기서 Detached 를 다시 가져올 필요가 없다. 왜? --> Reply는 Account를 Eager Fetch
+    public void deleteReply(Reply reply, Post post, Account account) {
+        Account writer = accountRepository.findByEmail(account.getEmail());
 
-        reply.unsetWriter();
+        reply.unsetWriter(writer);
         reply.depostedOn(post);
         replyRepository.delete(reply);
     }

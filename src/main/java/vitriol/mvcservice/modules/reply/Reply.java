@@ -39,8 +39,8 @@ public class Reply extends LocalDateTimeEntity {
         account.replyAdd(this);
     }
     /** 양방향 매핑 메서드 With Account */
-    public void unsetWriter() {
-        this.account.replyRemove(this);
+    public void unsetWriter(Account account) {
+        account.replyRemove(this);
     }
 
     /** 양방향 매핑 메서드 With Post */

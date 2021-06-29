@@ -21,7 +21,7 @@ import vitriol.mvcservice.modules.account.validator.ProfileFormValidator;
 import vitriol.mvcservice.modules.account.validator.SignUpFormValidator;
 
 import javax.validation.Valid;
-import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor

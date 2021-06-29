@@ -35,7 +35,7 @@ public class Post extends LocalDateTimeEntity {
     private Long replyCount = 0L;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.EAGER)
     private String description;
 
     private boolean open;

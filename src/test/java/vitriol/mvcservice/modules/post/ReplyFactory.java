@@ -22,6 +22,4 @@ public class ReplyFactory {
         postService.createNewReply(reply, post, account);
         return reply;
     }
-
-
 }
