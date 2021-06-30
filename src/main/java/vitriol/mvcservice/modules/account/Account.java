@@ -56,8 +56,13 @@ public class Account extends LocalDateTimeEntity {
         this.getReplies().add(reply);
         this.replyCount++;
     }
+    public void replyRemoveByPostRemove(Reply reply) {
+        this.getReplies().remove(reply);
+//        this.replyCount--; bulk 문으로 대체
+    }
+
     public void replyRemove(Reply reply) {
         this.getReplies().remove(reply);
-//        this.replyCount--;
+        this.replyCount--;
     }
 }

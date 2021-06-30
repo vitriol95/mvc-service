@@ -29,7 +29,7 @@ public class Post extends LocalDateTimeEntity {
     private String title;
     private String introduction;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post")
     private List<Reply> replies = new ArrayList<>();
 
     private Long replyCount = 0L;

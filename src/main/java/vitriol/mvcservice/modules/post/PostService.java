@@ -79,17 +79,15 @@ public class PostService {
         post.unsetWriter(post.getAccount());
 
         Set<Account> accounts = new HashSet<>();
-
         List<Reply> targetReplies = post.getReplies();
-
         targetReplies.forEach(r -> accounts.add(r.getAccount()));
 
-        List<Reply> repliesByAccount = replyRepository.findReplyByAccount(accounts);
 
-        targetReplies.forEach(r -> r.unsetWriter(r.getAccount()));
+        // bulk update
         accountRepository.updateReplyCountByRemove(accounts.stream().map(Account::getId).collect(Collectors.toSet()));
-        replyRepository.delete();
+        replyRepository.bulkDeleteByRemovePost(targetReplies.stream().map(Reply::getId).collect(Collectors.toSet()));
 
+        postRepository.delete(post);
     }
 
     public void createNewReply(Reply reply, Post post, Account account) {

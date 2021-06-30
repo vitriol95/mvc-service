@@ -40,7 +40,7 @@ public class Reply extends LocalDateTimeEntity {
     }
     /** 양방향 매핑 메서드 With Account */
     public void unsetWriter(Account account) {
-        account.replyRemove(this);
+        account.replyRemoveByPostRemove(this);
     }
 
     /** 양방향 매핑 메서드 With Post */
