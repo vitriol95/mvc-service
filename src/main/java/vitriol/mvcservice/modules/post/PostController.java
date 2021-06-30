@@ -101,7 +101,7 @@ public class PostController {
     @PostMapping("/posts/{id}/delete")
     public String deletePostSubmit(@LoggedInUser Account account, @PathVariable Long id) {
         Post post = postService.getPostToDelete(id, account);
-        postService.deletePost(post, account);
+        postService.deletePost(post);
         return "redirect:/";
     }
 }

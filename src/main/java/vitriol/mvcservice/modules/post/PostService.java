@@ -11,6 +11,8 @@ import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.reply.ReplyRepository;
 
 import javax.transaction.Transactional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,7 +45,7 @@ public class PostService {
     }
 
     public Post getPostToDelete(Long id, Account account) {
-        Post post = postRepository.findPostWithUserAndRepliesById(id);
+        Post post = postRepository.findDeletePostWithAccountAndRepliesById(id);
         validateWriter(account, post);
         return post;
     }
@@ -66,12 +68,28 @@ public class PostService {
 //        postRepository.delete(post);
 //    }
 
-    public void deletePost(Post post, Account account) {
-        Account writer = accountRepository.findByEmail(account.getEmail());
+//    public void deletePost(Post post) {
+//
+//        post.unsetWriter(post.getAccount());
+//        post.getReplies().forEach(reply -> reply.unsetWriter(reply.getAccount()));
+//        postRepository.delete(post);
+//    }
 
-        post.unsetWriter(writer);
-        post.getReplies().forEach(reply -> reply.unsetWriter(reply.getAccount()));
-        postRepository.delete(post);
+    public void deletePost(Post post) {
+        post.unsetWriter(post.getAccount());
+
+        Set<Account> accounts = new HashSet<>();
+
+        List<Reply> targetReplies = post.getReplies();
+
+        targetReplies.forEach(r -> accounts.add(r.getAccount()));
+
+        List<Reply> repliesByAccount = replyRepository.findReplyByAccount(accounts);
+
+        targetReplies.forEach(r -> r.unsetWriter(r.getAccount()));
+        accountRepository.updateReplyCountByRemove(accounts.stream().map(Account::getId).collect(Collectors.toSet()));
+        replyRepository.delete();
+
     }
 
     public void createNewReply(Reply reply, Post post, Account account) {

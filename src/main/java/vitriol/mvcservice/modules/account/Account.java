@@ -58,6 +58,6 @@ public class Account extends LocalDateTimeEntity {
     }
     public void replyRemove(Reply reply) {
         this.getReplies().remove(reply);
-        this.replyCount--;
+//        this.replyCount--;
     }
 }
