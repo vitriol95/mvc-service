@@ -19,7 +19,7 @@
                 <th scope="col">Icon</th>
                 <th scope="col">닉네임</th>
                 <th scope="col">게시글 수</th>
-                <th scope="col">댓글 수</th>
+                <th scope="col">소개 글</th>
                 <th scope="col">가입 날짜</th>
             </tr>
             </thead>
@@ -31,7 +31,7 @@
                          width="32" height="32" class="rounded boarder bg-light"></td>
                 <td th:text="${all.nickname}"></td>
                 <td th:text="${all.postCount}"></td>
-                <td th:text="${all.replyCount}"></td>
+                <td th:text="${all.bio}"></td>
                 <td th:text="${#temporals.format(all.createdDate,'yyyy-MM-dd HH:mm')}"></td>
             </tr>
             </tbody>

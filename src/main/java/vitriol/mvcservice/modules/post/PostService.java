@@ -26,9 +26,7 @@ public class PostService {
 
     public Post createNewPost(Post newPost, Account account) {
 
-//        Account writer = accountRepository.findByEmail(account.getEmail());
-        Account writer = accountRepository.findAccountWithPostsByEmail(account.getEmail());
-//         Detached 상태인 애를 데려오기
+        Account writer = accountRepository.findByEmail(account.getEmail());
 
         newPost.setWriter(writer);
         return postRepository.save(newPost);
@@ -60,33 +58,12 @@ public class PostService {
         modelMapper.map(newPostForm, post);
     }
 
-//    public void deletePost(Post post, Account account) {
-//        Account writer = accountRepository.findByEmail(account.getEmail());
-//        // Detached
-//
-//        post.unsetWriter(writer);
-//        postRepository.delete(post);
-//    }
-
-//    public void deletePost(Post post) {
-//
-//        post.unsetWriter(post.getAccount());
-//        post.getReplies().forEach(reply -> reply.unsetWriter(reply.getAccount()));
-//        postRepository.delete(post);
-//    }
-
     public void deletePost(Post post) {
         post.unsetWriter(post.getAccount());
-
-        Set<Account> accounts = new HashSet<>();
         List<Reply> targetReplies = post.getReplies();
-        targetReplies.forEach(r -> accounts.add(r.getAccount()));
 
-
-        // bulk update
-        accountRepository.updateReplyCountByRemove(accounts.stream().map(Account::getId).collect(Collectors.toSet()));
         replyRepository.bulkDeleteByRemovePost(targetReplies.stream().map(Reply::getId).collect(Collectors.toSet()));
-
+        post.makeRepliesEmpty();
         postRepository.delete(post);
     }
 
@@ -99,10 +76,8 @@ public class PostService {
         replyRepository.save(reply);
     }
 
-    public void deleteReply(Reply reply, Post post, Account account) {
-        Account writer = accountRepository.findByEmail(account.getEmail());
+    public void deleteReply(Reply reply, Post post) {
 
-        reply.unsetWriter(writer);
         reply.depostedOn(post);
         replyRepository.delete(reply);
     }

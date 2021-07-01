@@ -11,7 +11,6 @@ import vitriol.mvcservice.modules.account.LoggedInUser;
 import vitriol.mvcservice.modules.post.form.NewPostForm;
 import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.reply.ReplyRepository;
-import vitriol.mvcservice.modules.reply.ReplyService;
 import vitriol.mvcservice.modules.reply.form.NewReplyForm;
 
 import javax.validation.Valid;
@@ -23,7 +22,6 @@ public class PostController {
     private final PostService postService;
     private final ModelMapper modelMapper;
     private final PostRepository postRepository;
-    private final ReplyService replyService;
     private final ReplyRepository replyRepository;
 
     @GetMapping("/new-post")
@@ -69,8 +67,7 @@ public class PostController {
     public String deleteReplySubmit(@PathVariable("postId") Long id, @PathVariable("replyId") Long replyId) {
         Post post = postService.getVanillaPost(id);
         Reply reply = replyRepository.findReplyById(replyId); // Account 까지 Fetch 된상태에 해당한다.
-        Account account = reply.getAccount();
-        postService.deleteReply(reply, post, account);
+        postService.deleteReply(reply, post);
         return "redirect:/posts/" + id;
     }
 

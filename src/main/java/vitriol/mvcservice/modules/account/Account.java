@@ -33,36 +33,13 @@ public class Account extends LocalDateTimeEntity {
     @Lob
     private String profileImage;
 
-    @OneToMany(mappedBy = "account")
-    private Set<Post> posts = new HashSet<>();
-
     private Long postCount = 0L;
 
-    @OneToMany(mappedBy = "account")
-    private List<Reply> replies = new ArrayList<>();
-
-    private Long replyCount = 0L;
-
-    public void postAdd(Post post) {
-        this.getPosts().add(post);
+    public void plusPostCount() {
         this.postCount++;
     }
 
-    public void postRemove(Post post) {
-        this.getPosts().remove(post);
+    public void minusPostCount() {
         this.postCount--;
-    }
-    public void replyAdd(Reply reply) {
-        this.getReplies().add(reply);
-        this.replyCount++;
-    }
-    public void replyRemoveByPostRemove(Reply reply) {
-        this.getReplies().remove(reply);
-//        this.replyCount--; bulk 문으로 대체
-    }
-
-    public void replyRemove(Reply reply) {
-        this.getReplies().remove(reply);
-        this.replyCount--;
     }
 }

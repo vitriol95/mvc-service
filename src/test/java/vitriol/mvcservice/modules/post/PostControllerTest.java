@@ -100,7 +100,7 @@ class PostControllerTest {
         Post post = postRepository.findPostWithAccountById(id);
         assertThat(post).isNotNull();
         Account vitriol = accountRepository.findByEmail("vitriol95@naver.com");
-        assertThat(vitriol.getPosts()).contains(post); // account 내에 저장되었는가?
+        assertThat(vitriol.getPostCount()).isEqualTo(1L);
         assertThat(post.isWriter(vitriol)).isTrue(); // 글쓴이가 맞는가?
     }
 
@@ -121,7 +121,7 @@ class PostControllerTest {
         Post post = postRepository.findPostWithAccountById(1L);
         assertThat(post).isNull();
         Account vitriol = accountRepository.findByEmail("vitriol95@naver.com");
-        assertThat(vitriol.getPosts()).doesNotContain(post);
+        assertThat(vitriol.getPostCount()).isEqualTo(0);
     }
 
 

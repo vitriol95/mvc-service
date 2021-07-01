@@ -20,11 +20,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByNickname(String nickname);
 
-    @Query("select a from Account a left join fetch a.posts where a.email = :email")
-    Account findAccountWithPostsByEmail(@Param("email") String email);
 
-    @Transactional
-    @Modifying
-    @Query("update Account a set a.replyCount = a.replyCount-1 where a.id in (:ids)")
-    int updateReplyCountByRemove(@Param("ids") Set<Long> ids);
 }

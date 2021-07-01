@@ -20,7 +20,7 @@ public class Reply extends LocalDateTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,15 +33,6 @@ public class Reply extends LocalDateTimeEntity {
         return this.account.equals(userAccount.getAccount());
     }
 
-    /** 양방향 매핑 메서드 With Account */
-    public void setWriter(Account account) {
-        this.account = account;
-        account.replyAdd(this);
-    }
-    /** 양방향 매핑 메서드 With Account */
-    public void unsetWriter(Account account) {
-        account.replyRemoveByPostRemove(this);
-    }
 
     /** 양방향 매핑 메서드 With Post */
     public void postedOn(Post post) {
@@ -51,5 +42,9 @@ public class Reply extends LocalDateTimeEntity {
     /** 양방향 매핑 메서드 With Post */
     public void depostedOn(Post post) {
         post.replyRemove(this);
+    }
+
+    public void setWriter(Account account) {
+        this.account = account;
     }
 }

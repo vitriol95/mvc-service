@@ -1,6 +1,7 @@
 package vitriol.mvcservice.modules.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 class PostWithReplyControllerTest {
 
     @Autowired
@@ -86,6 +88,36 @@ class PostWithReplyControllerTest {
         accountRepository.deleteAll();
     }
 
+    @DisplayName("댓글있는 게시글 삭제")
+    @Test
+    @WithUserDetails(value = "vitriol95@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    void 댓글있는_게시글_삭제() throws Exception {
+        Account vitriol = accountRepository.findByEmail("vitriol95@naver.com");
+        Account test1 = accountFactory.newAccount("test1");
+        Account test2 = accountFactory.newAccount("test2");
+        Account test3 = accountFactory.newAccount("test3");
+        Post postByVitriol = postFactory.newPost("title", vitriol);
+        Reply reply1 = replyFactory.newReply(postByVitriol, test1);
+        Reply reply2 = replyFactory.newReply(postByVitriol, test2);
+        Reply reply3 = replyFactory.newReply(postByVitriol, test3);
+
+        log.info("======================================");
+
+        mockMvc.perform(post("/posts/" + postByVitriol.getId() + "/delete")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+
+        log.info("======================================");
+
+        assertThat(postRepository.findPostById(postByVitriol.getId())).isNull();
+        assertThat(replyRepository.findReplyById(reply1.getId())).isNull();
+
+        assertThat(vitriol.getPostCount()).isEqualTo(0);
+
+    }
+
+
     @DisplayName("댓글 입력 폼")
     @Test
     @WithUserDetails(value = "vitriol95@naver.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
@@ -129,8 +161,6 @@ class PostWithReplyControllerTest {
         assertThat(post2.getReplies()).contains(reply);
         assertThat(post2.getReplyCount()).isEqualTo(1L);
 
-        Account vitriol = accountRepository.findByEmail("vitriol95@naver.com");
-        assertThat(vitriol.getReplyCount()).isEqualTo(1L);
     }
 
     @DisplayName("입력된 댓글 뷰")
@@ -179,7 +209,5 @@ class PostWithReplyControllerTest {
         assertThat(replyById).isNull();
         assertThat(post1.getReplies()).doesNotContain(reply1);
         assertThat(post1.getReplyCount()).isEqualTo(0L);
-        assertThat(vitriol.getReplies()).doesNotContain(reply1);
-        assertThat(vitriol.getReplyCount()).isEqualTo(0L);
     }
 }

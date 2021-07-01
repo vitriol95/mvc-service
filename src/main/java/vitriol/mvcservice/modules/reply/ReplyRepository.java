@@ -17,14 +17,13 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     List<Reply> findByPost(Post post);
 
-    @EntityGraph(attributePaths = "account")
     Reply findReplyById(Long id);
 
     @Query("select r from Reply r where r.account in (:accounts)")
     List<Reply> findReplyByAccount(@Param("accounts") Set<Account> accounts);
 
     @Transactional
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Modifying(flushAutomatically = true)
     @Query("delete from Reply r where r.id in (:ids)")
     int bulkDeleteByRemovePost(@Param("ids") Set<Long> ids);
 }
