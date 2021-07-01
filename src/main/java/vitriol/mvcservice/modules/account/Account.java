@@ -1,19 +1,13 @@
 package vitriol.mvcservice.modules.account;
 import lombok.*;
-import vitriol.mvcservice.modules.post.Post;
-import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.superclass.LocalDateTimeEntity;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id", callSuper = false)
+@EqualsAndHashCode(of = "id",callSuper = false)
 @Getter
 @Setter
 public class Account extends LocalDateTimeEntity {
@@ -33,10 +27,10 @@ public class Account extends LocalDateTimeEntity {
     @Lob
     private String profileImage;
 
-    private Long postCount = 0L;
+    private Long postCount;
 
     public void plusPostCount() {
-        this.postCount++;
+        this.postCount = this.postCount == null ? 1L : this.postCount + 1;
     }
 
     public void minusPostCount() {

@@ -22,6 +22,9 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
 
     Post findPostById(Long id);
 
+    @Query(value = "select p from Post p left join fetch p.replies where p.id = :id")
+    Post findPostToDeleteReplyById(@Param("id") Long id);
+
     @EntityGraph(attributePaths = "replies", type = EntityGraph.EntityGraphType.LOAD)
     Post findPostWithRepliesById(Long id);
 

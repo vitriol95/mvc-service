@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/");
 
-        http
-                .headers().frameOptions().disable();
+//        http
+//                .headers().frameOptions().disable(); when h2 - console
     }
 }

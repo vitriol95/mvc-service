@@ -29,6 +29,7 @@ public class AccountService implements UserDetailsService {
     public Account createNewAccount(SignUpForm signUpForm) {
         signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
         Account account = modelMapper.map(signUpForm, Account.class);
+        account.setPostCount(0L);
         return accountRepository.save(account);
     }
 
@@ -49,6 +50,5 @@ public class AccountService implements UserDetailsService {
 
     public void updateProfile(Account account, ProfileForm profileForm) {
         modelMapper.map(profileForm, account);
-        accountRepository.save(account);
     }
 }

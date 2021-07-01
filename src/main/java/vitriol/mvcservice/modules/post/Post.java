@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.UserAccount;
 import vitriol.mvcservice.modules.reply.Reply;
@@ -32,7 +33,7 @@ public class Post extends LocalDateTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Reply> replies = new ArrayList<>();
 
-    private Long replyCount = 0L;
+    private Long replyCount;
 
     @Lob
     @Basic(fetch = FetchType.EAGER)
@@ -49,7 +50,6 @@ public class Post extends LocalDateTimeEntity {
         account.minusPostCount();
     }
 
-
     public boolean isWriter(UserAccount userAccount) {
         return this.account.equals(userAccount.getAccount());
     }
@@ -61,7 +61,7 @@ public class Post extends LocalDateTimeEntity {
     /** 양방향 매핑 with Reply*/
     public void replyAdd(Reply reply) {
         this.getReplies().add(reply);
-        this.replyCount++;
+        this.replyCount = this.replyCount == null ? 1L : this.replyCount + 1;
     }
 
     public void replyRemove(Reply reply) {

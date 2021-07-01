@@ -1,5 +1,7 @@
 package vitriol.mvcservice.modules.account;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +22,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByNickname(String nickname);
 
-
+    @Override
+    Page<Account> findAll(Pageable pageable);
 }

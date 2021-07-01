@@ -29,6 +29,7 @@ public class PostService {
         Account writer = accountRepository.findByEmail(account.getEmail());
 
         newPost.setWriter(writer);
+        newPost.setReplyCount(0L);
         return postRepository.save(newPost);
     }
 

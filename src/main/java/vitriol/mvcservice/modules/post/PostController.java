@@ -65,7 +65,7 @@ public class PostController {
 
     @PostMapping(value = "/posts/{postId}/reply/{replyId}/delete")
     public String deleteReplySubmit(@PathVariable("postId") Long id, @PathVariable("replyId") Long replyId) {
-        Post post = postService.getVanillaPost(id);
+        Post post = postRepository.findPostToDeleteReplyById(id);
         Reply reply = replyRepository.findReplyById(replyId); // Account 까지 Fetch 된상태에 해당한다.
         postService.deleteReply(reply, post);
         return "redirect:/posts/" + id;
