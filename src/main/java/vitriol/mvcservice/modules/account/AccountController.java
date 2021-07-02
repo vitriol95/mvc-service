@@ -61,9 +61,8 @@ public class AccountController {
 
     @GetMapping("/settings")
     public String updateProfileView(@LoggedInUser Account account, Model model) {
-        Account accountToChange = accountRepository.findAccountById(account.getId());
-        model.addAttribute("account", accountToChange);
-        model.addAttribute(modelMapper.map(accountToChange, ProfileForm.class));
+        model.addAttribute(account);
+        model.addAttribute("profileForm",modelMapper.map(account, ProfileForm.class));
         return "account/settings";
     }
 
@@ -74,7 +73,7 @@ public class AccountController {
             model.addAttribute(account);
             return "account/settings";
         }
-        Account accountToChange = accountRepository.findAccountById(account.getId());
+        Account accountToChange = accountRepository.findByEmail(account.getEmail());
         accountService.updateProfile(accountToChange, profileForm);
         redirectAttributes.addFlashAttribute("message", "수정을 완료하였습니다");
         return "redirect:" + "/settings";

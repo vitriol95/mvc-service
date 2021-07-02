@@ -50,5 +50,6 @@ public class AccountService implements UserDetailsService {
 
     public void updateProfile(Account account, ProfileForm profileForm) {
         modelMapper.map(profileForm, account);
+        accountRepository.save(account);
     }
 }
