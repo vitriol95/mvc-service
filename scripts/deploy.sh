@@ -4,11 +4,11 @@ REPOSITORY=/home/ec2-user/app/ci
 PROJECT_NAME=mvc-service
 
 cp $REPOSITORY/zip/*.jar $REPOSITORY/
-CURRENT_PID=$(pgrep -fl api_aws | grep java | awk '{print $1}')
+CURRENT_PID=$(pgrep -fl mvc-service | grep jar | awk '{print $1}')
 
 echo "> pid: $CURRENT_PID"
 
-if [-z "$CURRENT_PID"]; then
+if [ -z "$CURRENT_PID" ]; then
   echo "어플리케이션 바로 실행"
 else
   echo "> kill -15 $CURRENT_PID"
