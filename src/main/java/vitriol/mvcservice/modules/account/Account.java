@@ -27,10 +27,10 @@ public class Account extends LocalDateTimeEntity {
     @Lob
     private String profileImage;
 
-    private Long postCount;
+    private int postCount;
 
     public void plusPostCount() {
-        this.postCount = this.postCount == null ? 1L : this.postCount + 1;
+        this.postCount++;
     }
 
     public void minusPostCount() {

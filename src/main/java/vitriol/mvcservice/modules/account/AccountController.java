@@ -67,14 +67,14 @@ public class AccountController {
     }
 
     @PostMapping("/settings")
-    public String updateProfile(@LoggedInUser Account account, Model model, @Valid @ModelAttribute ProfileForm profileForm, Errors errors,
-                                RedirectAttributes redirectAttributes) {
+    public String updateProfile(@LoggedInUser Account account, @Valid @ModelAttribute ProfileForm profileForm, Errors errors,
+                                Model model, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             return "account/settings";
         }
-        Account accountToChange = accountRepository.findByEmail(account.getEmail());
-        accountService.updateProfile(accountToChange, profileForm);
+
+        accountService.updateProfile(account, profileForm);
         redirectAttributes.addFlashAttribute("message", "수정을 완료하였습니다");
         return "redirect:" + "/settings";
     }

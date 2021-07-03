@@ -18,4 +18,5 @@ public class ProfileForm {
     private String bio;
 
     private String profileImage;
+
 }

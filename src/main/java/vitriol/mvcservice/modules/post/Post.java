@@ -33,7 +33,7 @@ public class Post extends LocalDateTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Reply> replies = new ArrayList<>();
 
-    private Long replyCount;
+    private int replyCount;
 
     @Lob
     @Basic(fetch = FetchType.EAGER)
@@ -43,7 +43,7 @@ public class Post extends LocalDateTimeEntity {
 
     public void setWriter(Account account) {
         this.account = account;
-        account.plusPostCount();
+        this.account.plusPostCount();
     }
 
     public void unsetWriter(Account account) {
@@ -61,7 +61,7 @@ public class Post extends LocalDateTimeEntity {
     /** 양방향 매핑 with Reply*/
     public void replyAdd(Reply reply) {
         this.getReplies().add(reply);
-        this.replyCount = this.replyCount == null ? 1L : this.replyCount + 1;
+        this.replyCount++;
     }
 
     public void replyRemove(Reply reply) {

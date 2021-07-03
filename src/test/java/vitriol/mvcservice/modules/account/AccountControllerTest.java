@@ -167,8 +167,7 @@ class AccountControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/settings"))
                 .andExpect(view().name("redirect:/settings"))
-                .andExpect(flash().attributeExists("message")); // 오.. flash
-
+                .andExpect(flash().attributeExists("message"));
         Account vitriol = accountRepository.findByEmail("vitriol95@naver.com");
 
         assertThat(vitriol.getNickname()).isEqualTo("vitriol951");

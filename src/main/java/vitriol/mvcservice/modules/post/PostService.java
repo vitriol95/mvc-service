@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import vitriol.mvcservice.modules.account.Account;
 import vitriol.mvcservice.modules.account.AccountRepository;
 import vitriol.mvcservice.modules.post.form.NewPostForm;
 import vitriol.mvcservice.modules.reply.Reply;
 import vitriol.mvcservice.modules.reply.ReplyRepository;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,9 +27,7 @@ public class PostService {
     public Post createNewPost(Post newPost, Account account) {
 
         Account writer = accountRepository.findByEmail(account.getEmail());
-
         newPost.setWriter(writer);
-        newPost.setReplyCount(0L);
         return postRepository.save(newPost);
     }
 

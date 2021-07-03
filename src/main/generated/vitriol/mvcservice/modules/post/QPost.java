@@ -42,7 +42,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public final ListPath<vitriol.mvcservice.modules.reply.Reply, vitriol.mvcservice.modules.reply.QReply> replies = this.<vitriol.mvcservice.modules.reply.Reply, vitriol.mvcservice.modules.reply.QReply>createList("replies", vitriol.mvcservice.modules.reply.Reply.class, vitriol.mvcservice.modules.reply.QReply.class, PathInits.DIRECT2);
 
-    public final NumberPath<Long> replyCount = createNumber("replyCount", Long.class);
+    public final NumberPath<Integer> replyCount = createNumber("replyCount", Integer.class);
 
     public final StringPath title = createString("title");
 

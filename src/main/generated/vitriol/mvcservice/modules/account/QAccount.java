@@ -37,7 +37,7 @@ public class QAccount extends EntityPathBase<Account> {
 
     public final StringPath password = createString("password");
 
-    public final NumberPath<Long> postCount = createNumber("postCount", Long.class);
+    public final NumberPath<Integer> postCount = createNumber("postCount", Integer.class);
 
     public final StringPath profileImage = createString("profileImage");
 

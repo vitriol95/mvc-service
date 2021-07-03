@@ -29,7 +29,7 @@ public class AccountService implements UserDetailsService {
     public Account createNewAccount(SignUpForm signUpForm) {
         signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
         Account account = modelMapper.map(signUpForm, Account.class);
-        account.setPostCount(0L);
+
         return accountRepository.save(account);
     }
 
@@ -37,6 +37,15 @@ public class AccountService implements UserDetailsService {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(new UserAccount(account), account.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
+    }
+
+    public void updateProfile(Account account, ProfileForm profileForm) {
+        Account accountToChange = accountRepository.findByEmail(account.getEmail());
+        // Detached to Managed
+
+        modelMapper.map(profileForm, accountToChange);
+        accountRepository.save(accountToChange);
+        login(accountToChange);
     }
 
     @Override
@@ -48,8 +57,4 @@ public class AccountService implements UserDetailsService {
         return new UserAccount(account); // principal
     }
 
-    public void updateProfile(Account account, ProfileForm profileForm) {
-        modelMapper.map(profileForm, account);
-        accountRepository.save(account);
-    }
 }
